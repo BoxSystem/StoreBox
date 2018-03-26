@@ -1,0 +1,26 @@
+db:
+  image: mongo
+  volumes:
+    - ./db:/data
+  container_name: storebox_db
+  restart: always
+
+cache:
+  image: redis
+  container_name: storebox_cache
+  restart: always
+
+svr:
+  build: arylo/storebox-api
+  ports:
+    - "9000:9000"
+  volumes:
+    - ./log:/usr/src/app/log
+    - ./backup:/usr/src/app/backup
+    - ./upload:/usr/src/app/upload
+    - ./app.yaml:/usr/src/app/config/app.yaml:ro
+  links:
+    - db
+    - cache
+  container_name: storebox_svr
+  restart: always
