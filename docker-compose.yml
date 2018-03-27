@@ -1,3 +1,4 @@
+# Database Sevice
 db:
   image: mongo
   volumes:
@@ -5,15 +6,15 @@ db:
   container_name: storebox_db
   restart: always
 
+# Cache Sevice
 cache:
   image: redis
   container_name: storebox_cache
   restart: always
 
+# Api Sevice
 svr:
-  build: arylo/storebox-api
-  ports:
-    - "9000:9000"
+  image: arylo/storebox-api
   volumes:
     - ./log:/usr/src/app/log
     - ./backup:/usr/src/app/backup
@@ -23,4 +24,23 @@ svr:
     - db
     - cache
   container_name: storebox_svr
+  restart: always
+
+# Webpage Sevice
+www:
+  image: yanqing07/storebox-ng2
+  container_name: storebox_www
+  restart: always
+
+# Access Sevice
+nginx:
+  image: nginx:alpine
+  restart: always
+  ports:
+    - "80:80"
+  volumes:
+    - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+  links:
+    - svr
+    - www
   restart: always
