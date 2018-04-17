@@ -2,7 +2,7 @@
 db:
   image: mongo
   volumes:
-    - ./db:/data
+    - ./db:/data/db
   container_name: storebox_db
   restart: always
 
